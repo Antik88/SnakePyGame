@@ -1,7 +1,8 @@
 import runpy
 import pygame
+import requests
 from pygame.locals import KEYDOWN
-from config import WIDTH, HEIGHT, FPS, BLACK, GAME_SPEED
+from config import WIDTH, HEIGHT, FPS, BLACK, GAME_SPEED, SERVER_URL
 from snake import Snake
 from apple import Apple
 from ui import Win, GameOver, Start, Pause
@@ -96,6 +97,15 @@ class Game():
     def lose(self):
         self.sound_player.play_lose_snd()
         self.sound_player.stop_music()
+
+        data = {
+            'name': 'Antik',
+            'score': len(self.player.parts)
+        }
+
+        response = requests.post(SERVER_URL + '/player', json=data)
+        print(response.text)
+
         loop = True
         while loop:
             ev = pygame.event.get()
